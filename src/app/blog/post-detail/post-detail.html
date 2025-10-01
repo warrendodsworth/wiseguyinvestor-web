@@ -25,23 +25,17 @@
         <h1 class="text-3xl font-bold italic text-gray-900 dark:text-white mb-4">{{ post.title }}</h1>
 
         <div
-          class="prose prose-lg max-w-none my-6 dark:prose-invert"
+          class="prose prose-lg max-w-full break-words my-6 dark:prose-invert"
           [innerHTML]="util.getSanitizedHtml(post.text)"
         ></div>
 
         <ng-container *ngIf="auth.currentUser$ | async as user">
-          <div *ngIf="user.roles.admin || user.uid === post.createUid" class="flex justify-end gap-3 mt-6">
-            <a
-              [routerLink]="['/blog/posts']"
-              class="px-4 py-2 rounded border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm transition"
-              >Manage</a
-            >
-            <a
-              [routerLink]="['/blog/posts', post.id, 'edit']"
-              class="px-4 py-2 rounded border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm transition"
-              >Edit</a
-            >
+          @if (user.roles.admin || user.uid === post.createUid) {
+          <div class="flex justify-end gap-3 mt-6">
+            <a [routerLink]="['/blog/posts']" class="button-secondary">Manage</a>
+            <a [routerLink]="['/blog/posts', post.id, 'edit']" class="button-secondary">Edit</a>
           </div>
+          }
         </ng-container>
       </div>
     </div>
@@ -49,14 +43,6 @@
 </div>
 
 <div class="flex justify-center my-8 gap-4">
-  <a
-    [routerLink]="['/blog']"
-    class="px-5 py-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium transition"
-    >Return to Blog</a
-  >
-  <a
-    [routerLink]="['/']"
-    class="px-5 py-2 rounded bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium transition"
-    >Home</a
-  >
+  <a [routerLink]="['/blog']" class="button-secondary">Return to Blog</a>
+  <a [routerLink]="['/']" class="button-secondary">Home</a>
 </div>
