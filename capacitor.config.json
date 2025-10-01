@@ -1,0 +1,36 @@
+{
+  "appId": "com.passage.app1",
+  "appName": "",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    },
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "",
+      "forceCodeForRefreshToken": true
+    },
+    "PushNotifications": {
+      "presentationOptions": []
+    },
+    "Badge": {
+      "persist": true,
+      "autoClear": false
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_push_icon"
+    }
+  },
+  "cordova": {
+    "preferences": {
+      "DisableDeploy": "true",
+      "ScrollEnabled": "false",
+      "android-minSdkVersion": "22",
+      "BackupWebStorage": "none",
+      "KeyboardDisplayRequiresUserAction": "false"
+    }
+  }
+}

@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
-import { homeRoutes } from './home/home.routes';
 import { accountsRoutes } from './accounts/accounts.routes';
 import { blogRoutes } from './blog/blog.routes';
+import { homeRoutes } from './home/home.routes';
 
 export const routes: Routes = [
-  ...homeRoutes,
+  // ...homeRoutes,
+  {
+    path: '',
+    children: homeRoutes,
+  },
   {
     path: 'accounts',
     children: accountsRoutes,
