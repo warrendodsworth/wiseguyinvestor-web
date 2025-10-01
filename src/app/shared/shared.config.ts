@@ -7,7 +7,7 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { EmptyListComponent } from '../core/components/empty-list.component';
 import { SkeletonTextComponent } from '../core/components/skeleton-text.component';
-import { CORE_PIPES } from '../core/core.module';
+import { CORE_PIPES } from '../core/core.pipes';
 import { FormlyCoreModule } from '../core/formly/formly-core.module';
 import { MaterialModule } from '../core/material.module';
 import { FormlyChildModule } from './shared-formly.config';
