@@ -3,11 +3,9 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
-import { displayNameField, profilePhotoField } from '../../core/formly/fields-app';
-import { emailReadOnlyField } from '../../core/formly/fields-basic';
-import { AppUser, Roles } from '../../core/models/user';
-import { AuthService } from '../../core/services/auth.service';
-import { UtilService } from '../../core/services/util.service';
+import { AppUser, Roles } from '@core/models';
+import { AuthService, UtilService } from '@core/services';
+import { displayNameField, profilePhotoField, emailReadOnlyField } from '@core/ui';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
 

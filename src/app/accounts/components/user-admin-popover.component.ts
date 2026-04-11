@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { AppUser } from '../../core/models/user';
+import { AppUser } from '@core/models';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 
 @Component({
