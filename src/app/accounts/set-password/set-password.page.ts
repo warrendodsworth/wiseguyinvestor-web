@@ -3,8 +3,7 @@ import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
-import { AuthService } from '@core';
-import { UtilService } from '@core';
+import { AuthService, UtilService } from '@core/services';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
 

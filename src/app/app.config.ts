@@ -15,7 +15,8 @@ import { connectStorageEmulator, getStorage, provideStorage } from '@angular/fir
 import { provideQuillConfig, QuillModule } from 'ngx-quill';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { ENVIRONMENT, provideCoreConfig, provideFormly, provideMaterial } from '@core';
+import { ENVIRONMENT, provideCoreConfig } from '@core';
+import { provideFormly, provideMaterial } from '@core/ui';
 
 export const appConfig: ApplicationConfig = {
   providers: [

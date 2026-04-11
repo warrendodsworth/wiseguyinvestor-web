@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { SkeletonTextComponent } from '@core';
+import { SkeletonTextComponent } from '@core/ui';
 import { AdminGuard } from '../accounts/admin.guard';
 import { PostComponent } from './components/post/post';
 import { blogFormlyProviders } from './blog-formly.config';

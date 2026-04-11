@@ -5,7 +5,7 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { firstValueFrom } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
-import { PhotoService } from '@core';
+import { PhotoService } from '@core/services';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { UnsplashSearchComponent } from '../../shared/photos/unsplash-search/unsplash-search';
 import { Post } from '../post';

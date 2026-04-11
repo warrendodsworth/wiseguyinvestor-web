@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, input, model, output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ShowPhotoComponent } from '@core';
-import { AppUser } from '@core';
-import { AuthService } from '@core';
-import { UserService } from '@core';
-import { UtilService } from '@core';
+import { ShowPhotoComponent } from '@core/ui';
+import { AppUser } from '@core/models';
+import { AuthService, UserService, UtilService } from '@core/services';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { UsersAdminPopoverComponent } from './user-admin-popover.component';
 

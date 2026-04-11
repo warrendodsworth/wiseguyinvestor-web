@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { DatePredicate } from '@core';
+import { DatePredicate } from '@core/services';
 
 import { SHARED_CONFIG } from '../../../shared/shared.config';
 import { Post } from '../../post';

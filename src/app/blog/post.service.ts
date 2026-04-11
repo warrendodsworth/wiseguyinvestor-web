@@ -14,7 +14,8 @@ import {
 } from '@angular/fire/firestore';
 
 import { Post } from './post';
-import { FileData, AuthService, EntityBaseFirestoreService, PhotoService } from '@core';
+import { AuthService, EntityBaseFirestoreService, PhotoService } from '@core/services';
+import { FileData } from '@core/models';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends EntityBaseFirestoreService<Post> {

@@ -6,7 +6,7 @@ import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { Post } from '../post';
 import { PostService } from '../post.service';
-import { AuthService, DatePredicate, UtilService } from '@core';
+import { AuthService, DatePredicate, UtilService } from '@core/services';
 
 @Component({
   selector: 'app-post-detail',

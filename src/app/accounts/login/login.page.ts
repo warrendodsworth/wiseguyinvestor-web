@@ -8,9 +8,7 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 import { Analytics } from '@angular/fire/analytics';
 import { logEvent } from 'firebase/analytics';
-import { AuthService } from '@core';
-import { ConfigService } from '@core';
-import { UtilService } from '@core';
+import { AuthService, ConfigService, UtilService } from '@core/services';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
 

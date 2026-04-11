@@ -4,9 +4,8 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/r
 import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 
-import { AppUser } from '@core';
-import { AuthService } from '@core';
-import { UtilService } from '@core';
+import { AppUser } from '@core/models';
+import { AuthService, UtilService } from '@core/services';
 
 @Injectable({ providedIn: 'root' })
 export class AdminGuard {

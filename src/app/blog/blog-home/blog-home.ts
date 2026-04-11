@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { where } from 'firebase/firestore';
-import { AuthService } from '@core';
+import { AuthService } from '@core/services';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { PostComponent } from '../components/post/post';
 import { PostService } from '../post.service';

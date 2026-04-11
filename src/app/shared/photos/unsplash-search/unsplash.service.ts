@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
-import { UtilService } from '@core';
+import { UtilService } from '@core/services';
 import { UnsplashPhoto, UnsplashResponse } from './unsplash-response';
 
 @Injectable({ providedIn: 'root' })

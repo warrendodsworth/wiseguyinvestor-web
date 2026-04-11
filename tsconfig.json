@@ -15,7 +15,10 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
-      "@core": ["./libs/core/index.ts"]
+      "@core": ["./libs/core/index.ts"],
+      "@core/services": ["./libs/core/services/index.ts"],
+      "@core/ui": ["./libs/core/index-ui.ts"],
+      "@core/models": ["./libs/core/models/index.ts"]
     }
   },
   "angularCompilerOptions": {
