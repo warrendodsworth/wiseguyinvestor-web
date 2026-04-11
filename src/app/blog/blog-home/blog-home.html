@@ -1,35 +1,62 @@
-<header class="mb-4">
-  <div class="text-center">
-    <h2>Welcome to our blog</h2>
-    <ng-container *ngIf="auth.currentUser$ | async as user">
-      <div *ngIf="user.roles.admin">
-        <a [routerLink]="['/blog/posts']" class="btn btn-light btn-sm">Manage</a>
+<!-- Page header -->
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Blog</h1>
+  <p class="text-slate-500 dark:text-slate-400 mt-1">Market education, analysis frameworks, and investing insights.</p>
+</div>
+
+<!-- Featured post hero -->
+@if (featuredPost(); as post) {
+  <a
+    [routerLink]="['/blog/posts', post.id]"
+    class="relative block rounded-2xl overflow-hidden mb-10 h-72 md:h-[420px] shadow-lg group"
+  >
+    <img
+      [src]="post.photoURL"
+      [alt]="post.title"
+      [title]="post.title"
+      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+    <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-medium bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+          {{ post.category }}
+        </span>
+        <span class="text-xs text-slate-300">Featured</span>
       </div>
-    </ng-container>
-  </div>
-</header>
-
-<div class="bg-gray-900 text-white rounded-xl p-6 md:p-10 mb-6 shadow-lg" *ngIf="featuredPost">
-  <div class="max-w-2xl">
-    <h1 class="text-3xl md:text-4xl font-semibold italic mb-2">{{ featuredPost.title }}</h1>
-    <p class="text-lg md:text-xl mb-4"><span [innerHTML]="featuredPost.text | slice : 0 : 100"></span></p>
-    <p>
-      <a
-        [routerLink]="['/blog/posts', featuredPost.id]"
-        class="text-white font-bold underline hover:text-blue-300 transition"
-        >Continue reading..</a
-      >
-    </p>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6" *ngIf="!(posts$ | async)">
-    <div class="card p-3 mb-4 shadow-sm">
-      <app-skeleton-text view="fb"></app-skeleton-text>
+      <h2 class="text-2xl md:text-4xl font-bold leading-tight mb-3">{{ post.title }}</h2>
+      <p class="text-sm md:text-base text-slate-300 line-clamp-2 max-w-2xl">{{ featuredExcerpt() }}</p>
+      <span class="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+        Read article
+        <span class="material-symbols-rounded text-base">arrow_forward</span>
+      </span>
     </div>
+  </a>
+}
+
+<!-- Latest articles -->
+@if (recentPosts(); as posts) {
+  @if (posts.length) {
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-5">Latest Articles</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      @for (post of posts; track post.id) {
+        <app-post [post]="post"></app-post>
+      }
+    </div>
+  }
+} @else {
+  <!-- Loading skeleton -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    @for (_ of [1, 2, 3, 4]; track $index) {
+      <div class="rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm">
+        <div class="h-44 bg-gray-100 dark:bg-gray-800 animate-pulse"></div>
+        <div class="p-5 space-y-3">
+          <div class="h-3 w-1/4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+          <div class="h-5 w-3/4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+          <div class="h-3 w-full bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+          <div class="h-3 w-2/3 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+        </div>
+      </div>
+    }
   </div>
-  <div class="col-md-6" *ngFor="let post of posts$ | async | slice : 0 : 6">
-    <app-post [post]="post"></app-post>
-  </div>
-</div>
+}

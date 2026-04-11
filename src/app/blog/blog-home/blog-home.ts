@@ -1,29 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { where } from 'firebase/firestore';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { PostComponent } from '../components/post/post';
-import { Post } from '../post';
 import { PostService } from '../post.service';
 
 @Component({
   templateUrl: './blog-home.html',
   imports: [SHARED_CONFIG, PostComponent],
 })
-export class BlogHomePage implements OnInit {
-  posts$: Observable<Post[]> | undefined;
-  featuredPost: Post | undefined;
+export class BlogHomePage {
+  auth = inject(AuthService);
+  private postService = inject(PostService);
 
-  constructor(public auth: AuthService, public postService: PostService) {}
-
-  ngOnInit() {
-    this.posts$ = this.postService.many$(where('draft', '==', false));
-
-    this.posts$.pipe(map((p) => p.find((x) => x.featured))).subscribe((post) => {
-      this.featuredPost = post;
-    });
-  }
+  posts = toSignal(this.postService.many$(where('draft', '==', false)));
+  featuredPost = computed(() => this.posts()?.find((x) => x.featured));
+  recentPosts = computed(() => this.posts()?.filter((x) => !x.featured).slice(0, 6));
+  featuredExcerpt = computed(() => {
+    const p = this.featuredPost();
+    if (!p?.text) return '';
+    return p.text.replace(/<[^>]*>/g, '').slice(0, 220).trim();
+  });
 }

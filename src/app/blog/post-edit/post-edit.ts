@@ -1,35 +1,30 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { finalize } from 'rxjs/operators';
-
 import { firstValueFrom } from 'rxjs';
-import { PhotoService } from '../../core/services/photo.service';
-import { UtilService } from '../../core/services/util.service';
-import { SHARED_CONFIG } from '../../shared/shared.config';
+import { finalize, tap } from 'rxjs/operators';
+
+import { PhotoService } from '@core';
+import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
+import { UnsplashSearchComponent } from '../../shared/photos/unsplash-search/unsplash-search';
 import { Post } from '../post';
 import { PostService } from '../post.service';
 
 @Component({
   templateUrl: './post-edit.html',
-  imports: [SHARED_CONFIG],
+  imports: [SHARED_FORMLY_CONFIG],
 })
-export class PostEditComponent implements OnInit {
-  constructor(
-    public route: ActivatedRoute,
-    public router: Router,
-    public util: UtilService,
-    public postService: PostService,
-    public photoService: PhotoService,
-    private cdRef: ChangeDetectorRef
-  ) {}
+export class PostEditComponent {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  postService = inject(PostService);
+  photoService = inject(PhotoService);
 
   form = new FormGroup({});
   options: FormlyFormOptions = { formState: {} };
   model: Post | undefined = new Post();
-
-  working = true;
+  working = signal(true);
   selectedFile: any;
 
   postFields: FormlyFieldConfig[] = [
@@ -43,6 +38,7 @@ export class PostEditComponent implements OnInit {
           props: {
             className: 'w-full h-48 rounded-lg bg-gray-100',
             label: 'Photo',
+            unsplashComponent: UnsplashSearchComponent,
             onFileSelected: (file: any) => (this.selectedFile = file),
           },
         },
@@ -73,21 +69,25 @@ export class PostEditComponent implements OnInit {
     },
   ];
 
-  async ngOnInit() {
+  constructor() {
     const postId = this.route.snapshot.paramMap.get('postId');
     if (postId) {
-      this.model = await firstValueFrom(this.postService.one$(postId).pipe(finalize(() => (this.working = false))));
+      firstValueFrom(
+        this.postService.one$(postId).pipe(
+          tap((post) => (this.model = post)),
+          finalize(() => this.working.set(false))
+        )
+      );
     } else {
       this.model = new Post();
-      this.working = false;
+      this.working.set(false);
     }
-    this.cdRef.detectChanges();
   }
 
   async save(model: Post | undefined) {
     if (!model) return;
     await this.postService.upsertPost(model, this.selectedFile);
     this.form.reset();
-    this.router.navigateByUrl(`/posts`);
+    this.router.navigate(['/blog/posts', model.id]);
   }
 }

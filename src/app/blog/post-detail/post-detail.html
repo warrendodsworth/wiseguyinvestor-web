@@ -1,48 +1,93 @@
 <div class="flex justify-center">
-  <div class="w-full max-w-3xl">
-    <div *ngIf="!(post$ | async)" class="bg-white dark:bg-gray-900 rounded-xl shadow p-6 mb-6">
-      <app-skeleton-text view="fb"></app-skeleton-text>
-    </div>
+  <div class="w-full max-w-6xl">
+    <!-- Back navigation -->
+    <a
+      [routerLink]="['/blog']"
+      class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-6"
+    >
+      <span class="material-symbols-rounded text-base leading-none">arrow_back</span>
+      Back to Blog
+    </a>
 
-    <div *ngIf="post$ | async as post" class="bg-white dark:bg-gray-900 rounded-xl shadow overflow-hidden">
-      @if(post.photoURL){
-      <div
-        class="w-full h-32 md:h-48 bg-cover bg-center"
-        [style.background-image]="util.getSanitizedStyle(post.photoURL)"
-      ></div>
-      }
+    @if (post$ | async; as post) {
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow overflow-hidden">
+        <!-- Hero image -->
+        @if (post.photoURL) {
+          <div
+            class="w-full h-48 md:h-72 bg-cover bg-center"
+            [style.background-image]="util.getSanitizedStyle(post.photoURL)"
+          ></div>
+        }
 
-      <div class="p-6">
-        <div *ngIf="post.videoURL" class="mb-4 flex justify-center">
-          <iframe
-            [src]="util.getSanitizedUrl(post.videoURL)"
-            class="w-full max-w-2xl aspect-video rounded"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-        </div>
-
-        <h1 class="text-3xl font-bold italic text-gray-900 dark:text-white mb-4">{{ post.title }}</h1>
-
-        <div
-          class="prose prose-lg max-w-full break-words my-6 dark:prose-invert"
-          [innerHTML]="util.getSanitizedHtml(post.text)"
-        ></div>
-
-        <ng-container *ngIf="auth.currentUser$ | async as user">
-          @if (user.roles.admin || user.uid === post.createUid) {
-          <div class="flex justify-end gap-3 mt-6">
-            <a [routerLink]="['/blog/posts']" class="button-secondary">Manage</a>
-            <a [routerLink]="['/blog/posts', post.id, 'edit']" class="button-secondary">Edit</a>
-          </div>
+        <div class="p-6 md:p-10">
+          <!-- Video embed -->
+          @if (post.videoURL) {
+            <div class="mb-6 flex justify-center">
+              <iframe
+                title="Video"
+                [src]="util.getSanitizedUrl(post.videoURL)"
+                class="w-full max-w-2xl aspect-video rounded"
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+            </div>
           }
-        </ng-container>
+
+          <!-- Category + author + date meta -->
+          <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-4">
+            @if (post.category) {
+              <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full px-3 py-1">
+                {{ post.category }}
+              </span>
+              <span>·</span>
+            }
+            <span>{{ post.authorName || 'Warren' }}</span>
+            <span>·</span>
+            <span>{{ toDate(post.createDate) | date: 'MMMM d, y' }}</span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
+            {{ post.title }}
+          </h1>
+
+          <!-- Body -->
+          <div
+            class="prose prose-lg max-w-full break-words dark:prose-invert prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-a:text-indigo-600 dark:prose-a:text-indigo-400"
+            [innerHTML]="util.getSanitizedHtml(post.text)"
+          ></div>
+
+          <!-- Admin controls -->
+          @if (auth.currentUser$ | async; as user) {
+            @if (user.roles.admin || user.uid === post.createUid) {
+              <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+                <a [routerLink]="['/blog/posts']" class="button-secondary">Manage</a>
+                <a [routerLink]="['/blog/posts', post.id, 'edit']" class="button-secondary">Edit</a>
+              </div>
+            }
+          }
+        </div>
       </div>
+    } @else {
+      <!-- Loading skeleton -->
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow p-6 mb-6">
+        <app-skeleton-text view="fb"></app-skeleton-text>
+      </div>
+    }
+
+    @if (post$ | async) {
+      <!-- <app-ad-unit slot="3480046117" class="block mt-8"></app-ad-unit> -->
+    }
+
+    <!-- Bottom back link -->
+    <div class="flex items-center mt-8">
+      <a
+        [routerLink]="['/blog']"
+        class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+      >
+        <span class="material-symbols-rounded text-base leading-none">arrow_back</span>
+        Back to Blog
+      </a>
     </div>
   </div>
-</div>
-
-<div class="flex justify-center my-8 gap-4">
-  <a [routerLink]="['/blog']" class="button-secondary">Return to Blog</a>
-  <a [routerLink]="['/']" class="button-secondary">Home</a>
 </div>

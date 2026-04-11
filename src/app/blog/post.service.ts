@@ -1,13 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
 
-import { FileData } from '../core/models/photo';
-import { AuthService } from '../core/services/auth.service';
-import { PhotoService } from '../core/services/photo.service';
-import { UtilService } from '../core/services/util.service';
-import { Post } from './post';
-import { EntityBaseFirestoreService } from '../core/services/base-firestore-entity.service';
-import { Auth } from '@angular/fire/auth';
 import {
   collection,
   deleteDoc,
@@ -19,6 +12,9 @@ import {
   where,
   writeBatch,
 } from '@angular/fire/firestore';
+
+import { Post } from './post';
+import { FileData, AuthService, EntityBaseFirestoreService, PhotoService } from '@core';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends EntityBaseFirestoreService<Post> {

@@ -1,14 +1,15 @@
 import { Routes } from '@angular/router';
 
-import { SkeletonTextComponent } from '../core/components/skeleton-text.component';
+import { SkeletonTextComponent } from '@core';
 import { AdminGuard } from '../accounts/admin.guard';
 import { PostComponent } from './components/post/post';
+import { blogFormlyProviders } from './blog-formly.config';
 
 export const blogRoutes: Routes = [
   {
     path: '',
     loadComponent: () => import('./blog-home/blog-home').then((m) => m.BlogHomePage),
-    title: 'Blog Home',
+    title: 'Blog',
   },
   {
     path: 'posts',
@@ -23,6 +24,7 @@ export const blogRoutes: Routes = [
         path: 'create',
         loadComponent: () => import('./post-edit/post-edit').then((m) => m.PostEditComponent),
         canActivate: [AdminGuard],
+        providers: blogFormlyProviders,
         title: 'Create Post',
       },
       {
@@ -34,6 +36,7 @@ export const blogRoutes: Routes = [
         path: ':postId/edit',
         loadComponent: () => import('./post-edit/post-edit').then((m) => m.PostEditComponent),
         canActivate: [AdminGuard],
+        providers: blogFormlyProviders,
         title: 'Edit Post',
       },
     ],

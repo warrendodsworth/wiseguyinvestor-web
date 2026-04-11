@@ -1,65 +1,67 @@
-<div class="flex items-start gap-6 py-6 border-b border-gray-200 dark:border-gray-800 group">
-  @if (post) {
-  <!-- Middle: Main content -->
-  <div class="flex-1 min-w-0">
-    <div class="flex items-center gap-2 mb-1">
-      <span
-        class="inline-block bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide"
-      >
-        {{ post.category }}
-      </span>
-      @if (post.draft) {
-      <span class="text-yellow-600 dark:text-yellow-400 font-semibold text-xs">Draft</span>
-      }
-    </div>
-    <h2
-      class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 leading-tight transition-colors duration-200"
-    >
-      <a
-        [routerLink]="['/blog/posts', post.id]"
-        class="hover:text-grey-700 dark:hover:text-grey-200 text-gray-900 dark:text-white"
-      >
-        {{ post.title }}
-      </a>
-    </h2>
-    <p
-      class="text-gray-700 dark:text-slate-100 text-base mb-2 line-clamp-2"
-      [innerHTML]="post.text | slice : 0 : 120"
-    ></p>
-    <div class="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
-      <span>{{ post.createDate.toString() | date : 'MMM d' }}</span>
-      <span class="flex items-center gap-1">
-        <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M12 20l9-5-9-5-9 5 9 5z" />
-          <path d="M12 12V4m0 0L4.93 7.36m7.07-3.36L19.07 7.36" />
-        </svg>
-        {{ post.likes || '0' }}
-      </span>
-    </div>
-    <div class="mt-2 flex gap-2 flex-wrap">
-      @for (tag of post.tags; track tag) {
-      <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded text-xs">
-        #{{ tag }}
-      </span>
-      }
-    </div>
-  </div>
-
-  <!-- Right: Thumbnail image -->
-  <div class="hidden md:block flex-shrink-0">
-    <a
-      [routerLink]="['/blog/posts', post.id]"
-      class="block w-32 h-24 bg-gray-100 dark:bg-gray-800 overflow-hidden rounded-lg"
-    >
+@if (post(); as p) {
+  <div
+    class="flex flex-col bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow duration-200 h-full group"
+  >
+    <!-- Thumbnail -->
+    <a [routerLink]="['/blog/posts', p.id]" class="block overflow-hidden h-44 shrink-0 bg-gray-100 dark:bg-gray-800">
       <img
-        [src]="post.photoURL"
-        alt="{{ post.title }}"
-        class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+        [src]="p.photoURL"
+        [alt]="p.title"
+        [title]="p.title"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         ngOptimizedImage
-        width="128"
-        height="96"
+        width="400"
+        height="176"
       />
     </a>
+
+    <div class="p-5 flex flex-col flex-1">
+      <!-- Category + read time -->
+      <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
+        @if (p.category) {
+          <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full px-3 py-0.5">
+            {{ p.category }}
+          </span>
+          <span>·</span>
+        }
+        <span>{{ readTime() }} min read</span>
+        @if (p.draft) {
+          <span class="text-yellow-600 dark:text-yellow-400 font-semibold ml-1">Draft</span>
+        }
+      </div>
+
+      <!-- Title -->
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white leading-snug mb-2">
+        <a
+          [routerLink]="['/blog/posts', p.id]"
+          class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+        >
+          {{ p.title }}
+        </a>
+      </h2>
+
+      <!-- Excerpt -->
+      <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-4 flex-1">{{ excerpt() }}</p>
+
+      <!-- Author row -->
+      <div class="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
+        @if (p.authorPhotoURL) {
+          <img
+            [src]="p.authorPhotoURL"
+            [alt]="p.authorName"
+            [title]="p.authorName"
+            class="w-6 h-6 rounded-full object-cover"
+            ngOptimizedImage
+            width="24"
+            height="24"
+          />
+        } @else {
+          <div class="w-6 h-6 rounded-full bg-linear-to-br from-blue-400 to-indigo-600 shrink-0"></div>
+        }
+        <span class="text-xs text-gray-500 dark:text-gray-400">
+          {{ p.authorName || 'Author' }} · {{ toDate(p.createDate) | date: 'MMM d, y' }}
+        </span>
+      </div>
+    </div>
   </div>
-  }
-</div>
+}

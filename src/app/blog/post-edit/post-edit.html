@@ -1,7 +1,13 @@
-@if (!working) {
+@if (!working()) {
 <header class="mb-6">
-  <h3 class="mb-0 text-xl">{{ model?.id ? 'Edit' : 'New' }} Post</h3>
-  <a [routerLink]="['/blog/posts']" class="btn btn-light">Back</a>
+  <nav class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+    <a [routerLink]="['/blog']" class="hover:text-gray-900 dark:hover:text-white transition-colors">Blog</a>
+    <span class="material-symbols-rounded text-sm">chevron_right</span>
+    <a [routerLink]="['/blog/posts']" class="hover:text-gray-900 dark:hover:text-white transition-colors">Posts</a>
+    <span class="material-symbols-rounded text-sm">chevron_right</span>
+    <span class="text-gray-900 dark:text-white">{{ model?.id ? 'Edit' : 'New' }}</span>
+  </nav>
+  <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ model?.id ? 'Edit' : 'New' }} Post</h3>
 </header>
 }
 
