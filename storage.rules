@@ -1,7 +1,51 @@
+rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function hasRole(role) { return isSignedIn() && (request.auth.token[role] == true)}
+    // || get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.roles[role] == true);}
+
     match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+      allow read, write: if isSignedIn();
+    }
+
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isOwner(uid) || hasRole('admin');
+    }
+
+    match /chats/{id} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    match /groups/{id} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /groups {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /police-check/{uid} {
+      allow read: if isOwner(uid) || hasRole('admin') || hasRole('mentor');
+      allow create, update: if isOwner(uid) || hasRole('admin');
+      allow delete: if isOwner(uid) || hasRole('admin') || hasRole('mentor');
+    }
+
+
+    // @deprecated
+    match /images/users {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() || hasRole('admin');
+    }
+
+    match /images/chats {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() || hasRole('admin');
     }
   }
 }

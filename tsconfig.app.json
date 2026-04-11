@@ -4,8 +4,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
+    "rootDir": ".",
     "types": []
   },
-  "include": ["src/**/*.ts", "src/app/accounts/user-list/user-list.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "include": ["src/**/*.ts", "libs/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts", "libs/**/*.spec.ts"]
 }
