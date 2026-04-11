@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ConfigService } from '../../core/services/config.service';
+import { ConfigService } from '@core';
 
 @Component({
   templateUrl: './about.html',

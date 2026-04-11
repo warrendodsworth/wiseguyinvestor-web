@@ -15,7 +15,7 @@ import { connectStorageEmulator, getStorage, provideStorage } from '@angular/fir
 import { provideQuillConfig, QuillModule } from 'ngx-quill';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { provideCoreConfig } from './core/core.config';
+import { ENVIRONMENT, provideCoreConfig, provideFormly, provideMaterial } from '@core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,7 +23,10 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
 
-    ...provideCoreConfig({ id: 'wgi', title: 'Wiseguy Investor' }, { theme: 'dark' }),
+    provideCoreConfig({ id: 'wgi', title: 'Wiseguy Investor' }, { theme: 'dark' }),
+    provideMaterial(),
+    provideFormly(),
+    { provide: ENVIRONMENT, useValue: environment },
 
     importProvidersFrom(QuillModule.forRoot()),
     provideQuillConfig({

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { PostComponent } from '../../blog/components/post/post';
 import { Post } from '../../blog/post';
 import { PostService } from '../../blog/post.service';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 
 @Component({
@@ -19,7 +19,7 @@ export class HomeComponent {
 
   protected readonly posts: Signal<Post[]>;
 
-  constructor() {
+  constructor(auth: AuthService) {
     this.posts = toSignal(this.postService.many$(where('draft', '==', false), orderBy('createDate', 'desc')), {
       initialValue: [],
     });

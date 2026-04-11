@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { AuthService } from './core/services/auth.service';
-import { ConfigService } from './core/services/config.service';
-import { ThemeService } from './core/services/theme.service';
+import { AuthService } from '@core';
+import { ConfigService } from '@core';
+import { ThemeService } from '@core';
 import { SHARED_CONFIG } from './shared/shared.config';
 
 @Component({
@@ -18,14 +18,12 @@ export class App {
   protected readonly title = signal('Wiseguy Investor');
   protected readonly year = new Date().getFullYear();
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private titleService: Title,
-    public auth: AuthService,
-    public _theme: ThemeService,
-    public config: ConfigService
-  ) {}
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
+  public auth = inject(AuthService);
+  public _theme = inject(ThemeService);
+  public config = inject(ConfigService);
 
   async ngOnInit() {
     // Set the default title initially
