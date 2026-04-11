@@ -1,0 +1,80 @@
+<div class="px-6 pt-3 flex items-center justify-between">
+  <h2 class="text-xl">Search Unsplash</h2>
+  <div class="flex items-center gap-1">
+    @if (photos().length > 0) {
+      <button type="button" mat-icon-button (click)="view.set('grid')" [color]="view() === 'grid' ? 'primary' : ''">
+        <mat-icon>grid_on</mat-icon>
+      </button>
+      <button type="button" mat-icon-button (click)="view.set('list')" [color]="view() === 'list' ? 'primary' : ''">
+        <mat-icon>view_list</mat-icon>
+      </button>
+    }
+    <button type="button" mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content>
+  <div class="pt-1 pb-1">
+    <mat-form-field class="w-full">
+      <mat-label>Search photos</mat-label>
+      <input
+        matInput
+        [value]="term()"
+        (input)="onInput($any($event.target).value)"
+        placeholder="e.g. mountains, ocean"
+        cdkFocusInitial
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  @if (working()) {
+    <div class="flex justify-center py-10">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (!term()) {
+    <div class="flex flex-col items-center justify-center gap-3 py-14 px-6 text-center text-gray-400">
+      <mat-icon class="text-5xl! w-12! h-12! opacity-40">image_search</mat-icon>
+      <p class="text-sm">
+        Search millions of free, high-quality photos from Unsplash.<br />Type a keyword above to get started.
+      </p>
+    </div>
+  } @else if (term() && photos().length === 0) {
+    <p class="text-center text-gray-400 text-sm py-8">No photos found for "{{ term() }}"</p>
+  } @else if (view() === 'grid') {
+    <div class="grid grid-cols-3 gap-1 p-2 max-h-96 overflow-y-auto">
+      @for (p of photos(); track p.id) {
+        <div
+          class="aspect-square bg-cover bg-center cursor-pointer rounded hover:opacity-80 transition-opacity"
+          [style.backgroundImage]="'url(' + p.urls.small + ')'"
+          [title]="p.alt_description || p.user.name"
+          (click)="select(p)"
+        ></div>
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col gap-2 p-2 max-h-96 overflow-y-auto">
+      @for (p of photos(); track p.id) {
+        <div
+          class="flex items-center gap-3 cursor-pointer rounded-lg p-1 hover:bg-black/5 transition-colors"
+          (click)="select(p)"
+        >
+          <img
+            [src]="p.urls.small"
+            [alt]="p.alt_description || p.user.name"
+            [title]="p.alt_description || p.user.name"
+            class="w-24 h-16 object-cover rounded-lg shrink-0"
+          />
+          <div class="flex flex-col min-w-0">
+            <span class="text-sm font-medium truncate">{{ p.user.name }}</span>
+            @if (p.user.location) {
+              <span class="text-xs text-gray-400 truncate">{{ p.user.location }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</mat-dialog-content>

@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
-import { UtilService } from '../../../core/services/util.service';
+import { UtilService } from '@core';
 import { UnsplashPhoto, UnsplashResponse } from './unsplash-response';
 
 @Injectable({ providedIn: 'root' })
 export class UnsplashService {
-  constructor(public http: HttpClient, public util: UtilService) {}
+  http = inject(HttpClient);
+  util = inject(UtilService);
   API_KEY = environment.unsplashKey;
   API_ENDPOINT = `https://api.unsplash.com/search/photos?client_id=${this.API_KEY}&per_page=30`;
 

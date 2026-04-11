@@ -5,33 +5,25 @@ import { NgPipesModule } from 'ngx-pipes';
 import { RouterModule } from '@angular/router';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
-import { EmptyListComponent } from '../core/components/empty-list.component';
-import { SkeletonTextComponent } from '../core/components/skeleton-text.component';
-import { CORE_PIPES } from '../core/core.pipes';
-import { FormlyCoreModule } from '../core/formly/formly-core.module';
-import { MaterialModule } from '../core/material.module';
-import { FormlyChildModule } from './shared-formly.config';
+import { MaterialModule } from '../../../libs/core/material.config';
+import { CORE_PIPES } from '../../../libs/core/core.pipes';
+import { EmptyListComponent } from '../../../libs/core/components/empty-list.component';
+import { SkeletonTextComponent } from '../../../libs/core/components/skeleton-text.component';
+import { SpinnerComponent } from '../../../libs/core/components/spinner.component';
+import { CardSkeletonComponent } from '../../../libs/core/components/card-skeleton.component';
 
-// Grouped here only to ensure frequently used Standalone Components can be imported together in one shot
-const standaloneComponents = [EmptyListComponent, SkeletonTextComponent];
+const standaloneComponents = [EmptyListComponent, SkeletonTextComponent, SpinnerComponent, CardSkeletonComponent];
 
-const modules = [
+export const SHARED_CONFIG = [
   CommonModule,
-  RouterModule, // neeeded for routerLink in templates
+  RouterModule,
   FormsModule,
   ReactiveFormsModule,
-
-  // 3rd party
   NgPipesModule,
-
-  // material
   MaterialModule,
-
-  // formly
-  FormlyModule,
-  FormlyMaterialModule,
-  FormlyCoreModule, // needed for custom wrappers and types in components
-  FormlyChildModule,
+  ...standaloneComponents,
+  ...CORE_PIPES,
 ];
 
-export const SHARED_CONFIG = [...modules, ...standaloneComponents, ...CORE_PIPES];
+// Use in components that render <formly-form>
+export const SHARED_FORMLY_CONFIG = [...SHARED_CONFIG, FormlyModule, FormlyMaterialModule];
