@@ -5,8 +5,11 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 @use 'tailwindcss' as *;
+@use '../libs/core/styles' as *;
 
-@use './app/core/styles/core.scss' as *;
+@source "../**/*.{html,ts,scss}";
+
+@plugin "@tailwindcss/typography";
 
 // Fonts Custom
 $noto-sans-font: 'Noto Sans', 'Helvetica Neue', sans-serif;
@@ -51,6 +54,11 @@ body {
 }
 body {
   margin: 0;
+}
+
+/* AdSense: hide unfilled ad slots to avoid white blocks on dark mode */
+ins.adsbygoogle[data-ad-status='unfilled'] {
+  display: none !important;
 }
 
 /* CUSTOM */
