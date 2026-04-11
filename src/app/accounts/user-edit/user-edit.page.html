@@ -2,8 +2,6 @@
   <h1 class="text-2xl font-bold mb-1">Edit Profile</h1>
   <p class="text-gray-500 mb-2">Update your profile information</p>
 
-  <!-- <button class="btn btn-link text-dark" (click)="logout()">Logout</button> -->
-  <!-- <button class="btn btn-link text-dark" (click)="deactivate()">Temporarily disable my account</button> -->
   <!-- <a routerLink="" *ngIf="currentUser?.uid == user?.uid" (click)="logout()" class="nav-link mt-3">Logout</a> -->
 </header>
 
@@ -20,4 +18,35 @@
       <button mat-stroked-button [disabled]="form.invalid" type="submit" fill="solid" shape="round">Save</button>
     </div>
   </form>
+
+  <!-- Account Management Actions -->
+  <div class="mt-6 pt-4 border-t border-gray-200">
+    <h2 class="text-lg font-semibold mb-2">Account Management</h2>
+
+    <nav class="divide-y divide-gray-200">
+      <a
+        [routerLink]="routes.changeEmail"
+        class="flex items-center justify-between py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+      >
+        <span>Change Email</span>
+        <span class="material-symbols-rounded text-gray-400 text-lg">chevron_right</span>
+      </a>
+      @if (!hasPasswordProvider()) {
+        <a
+          [routerLink]="routes.setPassword"
+          class="flex items-center justify-between py-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+        >
+          <span>Set Password</span>
+          <span class="material-symbols-rounded text-gray-400 text-lg">chevron_right</span>
+        </a>
+      }
+      <a
+        [routerLink]="routes.deleteAccount"
+        class="flex items-center justify-between py-3 text-sm text-red-600 hover:bg-gray-100 dark:text-red-700 dark:hover:bg-gray-700 transition-colors"
+      >
+        <span>Delete Account</span>
+        <span class="material-symbols-rounded text-gray-400 text-lg">chevron_right</span>
+      </a>
+    </nav>
+  </div>
 </div>

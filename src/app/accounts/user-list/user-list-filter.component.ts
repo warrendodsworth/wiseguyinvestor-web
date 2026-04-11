@@ -3,10 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
-import { AuthService } from '../../core/services/auth.service';
-import { UtilService } from '../../core/services/util.service';
-import { State, Store } from '../../core/store';
-import { SHARED_CONFIG } from '../../shared/shared.config';
+import { AuthService } from '@core';
+import { UtilService } from '@core';
+import { State, Store } from '@core';
+import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 
 export class UserListPageState extends State {
   role!: string;
@@ -23,7 +23,7 @@ export class UserListPageStore extends Store<UserListPageState> {
 
 @Component({
   selector: 'app-resoure-list-popover',
-  imports: [SHARED_CONFIG],
+  imports: [SHARED_FORMLY_CONFIG],
   template: `
     <form [formGroup]="form">
       <formly-form [form]="form" [fields]="fields" [model]="model" [options]="options"></formly-form>

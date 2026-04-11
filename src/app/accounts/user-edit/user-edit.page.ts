@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -8,11 +8,12 @@ import { emailReadOnlyField } from '../../core/formly/fields-basic';
 import { AppUser, Roles } from '../../core/models/user';
 import { AuthService } from '../../core/services/auth.service';
 import { UtilService } from '../../core/services/util.service';
-import { SHARED_CONFIG } from '../../shared/shared.config';
+import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
+import { ACCOUNTS_ROUTES } from '../accounts.constants';
 
 @Component({
   templateUrl: './user-edit.page.html',
-  imports: [SHARED_CONFIG],
+  imports: [SHARED_FORMLY_CONFIG],
 })
 export class UserEditPage implements OnInit {
   router = inject(Router);
@@ -22,6 +23,10 @@ export class UserEditPage implements OnInit {
   cdRef = inject(ChangeDetectorRef);
 
   constructor() {}
+
+  hasPasswordProvider = computed(
+    () => this.auth.authModular.currentUser?.providerData.some((p) => p.providerId === 'password') ?? true
+  );
 
   selectedSegment: string | undefined;
 
@@ -113,12 +118,12 @@ export class UserEditPage implements OnInit {
     const currentUser = await this.auth.getCurrentUser();
 
     // for admins to change email
-    let email: string | null | undefined = null;
+    let email: string | null | undefined;
     if (currentUser?.roles.admin && uid) {
       const meta = await this.auth.getUserMeta(uid);
       email = meta?.email;
     } else {
-      email = (await this.auth.afAuth.currentUser)?.email;
+      email = (await this.auth.authModular.currentUser)?.email;
     }
 
     // load user data
@@ -126,7 +131,7 @@ export class UserEditPage implements OnInit {
     this.model.email = email;
     this.model.mateJoin = this.model.mateJoin || {};
     if (!this.model.photoURL) {
-      this.model.photoURL = this.util.env.gravatarURL;
+      this.model.photoURL = this.util.env['gravatarURL'];
     }
     // console.table(`UserEditPage model:`, this.model);
     // this.model.mate = this.model.mate || {}; // temp until data migrated
@@ -138,13 +143,13 @@ export class UserEditPage implements OnInit {
 
   async save(user: AppUser) {
     const updatedUser = await this.auth.updateUser(user, {}, true);
-    const currentUser = await this.auth.afAuth.currentUser;
+    const currentUser = await this.auth.authModular.currentUser;
     // this.location.back(); // original choice
 
     if (this.options.formState.admin && currentUser?.uid != updatedUser?.uid) {
       this.router.navigate(['/accounts/users']);
     } else {
-      this.router.navigateByUrl('/');
+      this.router.navigate(['/accounts/profile']);
     }
   }
 
@@ -152,6 +157,8 @@ export class UserEditPage implements OnInit {
   togglePreview(value: string) {
     this.router.navigate(['.'], { queryParams: { selectedSegment: value }, relativeTo: this.route });
   }
+
+  readonly routes = ACCOUNTS_ROUTES;
 }
 
 // doesn't fire - because Formly’s change hook on a field does not listen to programmatic value changes

@@ -4,8 +4,10 @@
   </h2>
 </header>
 
-<ng-container *ngIf="users$ | async as users1">
-  <div class="divide-y divide-gray-200 rounded-lg shadow bg-white">
-    <app-user-item *ngFor="let user of users1" [user]="user" [adminView]="true" [showFullName]="true"></app-user-item>
+@if (users$ | async; as users1) {
+  <div class="flex flex-col gap-1">
+    @for (item of users1; track $index) {
+      <app-user-item [user]="item" [adminView]="true" [showFullName]="true"></app-user-item>
+    }
   </div>
-</ng-container>
+}

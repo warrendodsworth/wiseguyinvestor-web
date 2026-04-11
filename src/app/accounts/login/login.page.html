@@ -1,83 +1,152 @@
-<div class="pt-10 flex flex-col items-center">
+<div class="flex flex-col items-center py-6 sm:py-16 sm:px-4">
   <!-- Card -->
-  <div class="border border-gray-200 rounded-lg">
-    <div class="w-full md:w-[480px] p-4 flex flex-col items-center">
-      <div class="flex items-center gap-4">
-        <h2 class="text-2xl font-normal text-center my-8">{{ config.config().title }}</h2>
+  <div class="w-full max-w-[460px] bg-white dark:bg-gray-800 rounded-2xl shadow-md">
+    <div class="p-8 sm:p-12 flex flex-col">
+      <!-- Logo/Title -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-semibold text-gray-900 dark:text-white">{{ config.config().title }}</h1>
       </div>
 
-      <!-- Login -->
-      <section class="text-center mb-4">
+      <!-- Login Form -->
+      <section class="mb-8">
         <form
           [formGroup]="form"
-          (keyup.enter)="view == 'login' ? loginEmail(model) : view == 'signup' ? signupEmail(model) : ''"
+          novalidate
+          (keyup.enter)="
+            view() == 'login' && form.valid
+              ? loginEmail(model)
+              : view() == 'signup' && form.valid
+                ? signupEmail(model)
+                : null
+          "
         >
-          @if (view == 'forgotPassword') {
-          <p>Enter the email account you used to sign up, and we'll send you a password reset link.</p>
-          } @else if (view == 'signup'){
-          <h2 class="text-xl mb-2">Welcome</h2>
-          <p class="mb-4">First we need a few details to get your account set up</p>
+          @if (view() == 'forgotPassword') {
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">
+              Enter the email account you used to sign up, and we'll send you a password reset link.
+            </p>
+          } @else if (view() == 'signup') {
+            <div class="mb-6">
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Hi</h2>
+              <p class="text-gray-800 dark:text-gray-400">We need a few details to set up your account</p>
+            </div>
+          } @else {
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">Enter your account details below</p>
           }
 
           <!-- Formly Form -->
-          <formly-form [form]="form" [fields]="fields" [model]="model" [options]="options"></formly-form>
+          <div class="">
+            <formly-form [form]="form" [fields]="fields" [model]="model" [options]="options"></formly-form>
+          </div>
 
-          <div class="my-3">
-            <button *ngIf="view === 'login'" type="button" (click)="loginEmail(model)" class="button-primary">
-              Sign in
-            </button>
-            <button *ngIf="view === 'signup'" type="button" (click)="signupEmail(model)" class="button-primary">
-              Sign up
-            </button>
-            <button
-              *ngIf="view === 'forgotPassword'"
-              type="button"
-              (click)="sendPasswordResetEmail(model)"
-              class="button-secondary"
-            >
-              Email link
-            </button>
+          <!-- Primary Button -->
+          <div class="mt-6">
+            @if (view() === 'login') {
+              <button
+                type="button"
+                (click)="loginEmail(model)"
+                class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              >
+                Sign in
+              </button>
+            } @else if (view() === 'signup') {
+              <button
+                type="button"
+                (click)="signupEmail(model)"
+                class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              >
+                Create account
+              </button>
+            } @else if (view() === 'forgotPassword') {
+              <button
+                type="button"
+                (click)="sendPasswordResetEmail(model)"
+                class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              >
+                Send reset link
+              </button>
+            }
           </div>
         </form>
 
-        <div class="flex flex-col items-center justify-center gap-2">
-          <div *ngIf="view === 'login'">
-            <a (click)="changeView('forgotPassword')" class="cursor-pointer">Forgot password?</a>
-          </div>
-          <div *ngIf="view === 'forgotPassword'">
-            <a (click)="changeView('login')" class="cursor-pointer">Back to Sign in</a>
-          </div>
-          <span *ngIf="view === 'signup'">
-            Already have an account?
-            <a (click)="changeView('login')" class="cursor-pointer">Sign in</a>
-          </span>
-          <span *ngIf="view === 'login'">
-            Don't have an account?
-            <a (click)="changeView('signup')" class="cursor-pointer"> Sign up</a>
-          </span>
+        <!-- Links -->
+        <div class="mt-6 flex flex-col items-center justify-center gap-4 text-sm">
+          @if (view() === 'login') {
+            <div class="flex flex-col items-center gap-4">
+              <a
+                (click)="changeView('forgotPassword')"
+                class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer font-medium"
+                >Forgot password?</a
+              >
+              <div class="text-gray-600 dark:text-gray-400">
+                Don't have an account?
+                <a
+                  (click)="changeView('signup')"
+                  class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer font-medium"
+                  >Sign up</a
+                >
+              </div>
+            </div>
+          } @else if (view() === 'forgotPassword') {
+            <a
+              (click)="changeView('login')"
+              class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer font-medium"
+              >Back to Sign in</a
+            >
+          } @else if (view() === 'signup') {
+            <div class="text-gray-600 dark:text-gray-400">
+              Already have an account?
+              <a
+                (click)="changeView('login')"
+                class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer font-medium"
+                >Sign in</a
+              >
+            </div>
+          }
         </div>
       </section>
 
+      <!-- Divider -->
+      <div class="flex items-center gap-4 mb-8">
+        <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+        <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">OR</span>
+        <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+      </div>
+
       <!-- Social Auth -->
-      <section class="mb-4">
+      <section class="mb-6">
         <button
           (click)="loginGoogle()"
-          class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-1 pl-2 pr-4 rounded-lg flex items-center"
+          class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors duration-200"
         >
-          <img class="inline-block h-8 w-8 mr-2" src="/icons/auth/google.svg" />
-          <span>Sign {{ view === 'login' ? 'in' : 'up' }} with Google</span>
+          <img class="h-5 w-5" src="/icons/auth/google.svg" alt="Google" />
+          <span>Sign {{ view() === 'login' ? 'in' : 'up' }} with Google</span>
         </button>
       </section>
 
       <!-- Signup Info -->
-      @if (view === 'signup') {
-      <section class="w-full sm:w-80 text-center mt-4">
-        <span>
-          One last thing - by signing up you understand and agree with our
-          <a href="../../home/terms-and-conditions" target="_blank" rel="noopener">Terms of Use</a> and
-          <a href="../../home/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
-        </span>
-      </section>
+      @if (view() === 'signup') {
+        <section
+          class="text-center text-xs text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-6"
+        >
+          <span>
+            By signing up, you agree to our
+            <a
+              href="../../home/terms-and-conditions"
+              target="_blank"
+              rel="noopener"
+              class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              >Terms of Use</a
+            >
+            and
+            <a
+              href="../../home/privacy-policy"
+              target="_blank"
+              rel="noopener"
+              class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              >Privacy Policy</a
+            >
+          </span>
+        </section>
       }
     </div>
   </div>

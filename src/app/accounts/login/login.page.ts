@@ -1,39 +1,36 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Auth, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, User } from '@angular/fire/auth';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Auth } from '@angular/fire/auth';
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { DateTime } from 'luxon';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-import { Analytics, logEvent } from '@angular/fire/analytics';
-import { AuthService } from '../../core/services/auth.service';
-import { ConfigService } from '../../core/services/config.service';
-import { UtilService } from '../../core/services/util.service';
-import { SHARED_CONFIG } from '../../shared/shared.config';
+import { Analytics } from '@angular/fire/analytics';
+import { logEvent } from 'firebase/analytics';
+import { AuthService } from '@core';
+import { ConfigService } from '@core';
+import { UtilService } from '@core';
+import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
+import { ACCOUNTS_ROUTES } from '../accounts.constants';
 
 type View = 'login' | 'signup' | 'forgotPassword';
 
 @Component({
   templateUrl: 'login.page.html',
-  imports: [SHARED_CONFIG],
+  imports: [SHARED_FORMLY_CONFIG],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginPage implements OnInit, OnDestroy {
-  constructor(
-    public router: Router,
-    public route: ActivatedRoute,
-    public auth: AuthService,
-    public util: UtilService,
-    public config: ConfigService,
-    protected authModular: Auth,
-    private analytics: Analytics
-  ) {
-    this.handleWebRedirectLogin();
-  }
-  private destroy$ = new Subject();
-  view: View = 'login';
+export class LoginPage {
+  private analytics = inject(Analytics, { optional: true });
+  protected authModular = inject(Auth);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
+  auth = inject(AuthService);
+  util = inject(UtilService);
+  config = inject(ConfigService);
+
+  view = signal<View>('login');
   form = new FormGroup({});
   options: FormlyFormOptions = { formState: {} };
   model = { email: '', password: '', displayName: '' };
@@ -43,7 +40,7 @@ export class LoginPage implements OnInit, OnDestroy {
       type: 'input',
       templateOptions: {
         type: 'text',
-        label: 'Preferred name or nickname',
+        label: 'Preferred name',
         required: true,
         hideRequiredMarker: true,
         inputmode: 'text',
@@ -75,6 +72,15 @@ export class LoginPage implements OnInit, OnDestroy {
         hideRequiredMarker: true,
         minLength: 6,
       },
+      validators: {
+        validation: [
+          (control: AbstractControl): ValidationErrors | null => {
+            const value = control.value;
+            if (!value) return null;
+            return value.length >= 6 ? null : { minlength: { requiredLength: 6, actualLength: value.length } };
+          },
+        ],
+      },
       hideExpression: (model: any, formState: any) => formState.view == 'forgotPassword',
       expressionProperties: {
         'templateOptions.autocomplete': (model: any, formState: any) =>
@@ -83,54 +89,16 @@ export class LoginPage implements OnInit, OnDestroy {
     },
   ];
 
-  ngOnInit() {
-    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((params) => {
-      this.view = (params.get('view') as View) || this.view;
-      this.options.formState.view = this.view; // formly options formstate.view needed for consistent hide expr execution
-      logEvent(this.analytics, 'screen_view');
-      logEvent(this.analytics, 'page_view', { page: this.view });
-    });
-  }
-
-  /**
-   * After signin with redirect using Social logins | https://firebase.google.com/docs/auth/web/google-signin
-   * https://stackoverflow.com/questions/46922658/how-to-detect-getredirectresult-state-after-signinwithredirect
-   */
-  private async handleWebRedirectLogin() {
-    if (sessionStorage.getItem('web-redirect-login-in-progress')) {
-      sessionStorage.removeItem('web-redirect-login-in-progress');
-
-      try {
-        const baseLoading = await this.util.openLoading('Please wait..');
-        // Modular API: listen for auth state changes
-        const unsubscribe = onAuthStateChanged(this.authModular, async (user: User | null) => {
-          if (user) {
-            const detailLoading = this.util.openLoading('Logging you in..');
-            baseLoading.close();
-
-            const d = DateTime.fromRFC2822(user.metadata.creationTime as string);
-            const isNewUser = d.diffNow().negate().as('minute') < 1;
-
-            await this.auth.updateUserPostLogin(user);
-
-            if (isNewUser) this.auth.goChooseUserType();
-            else if (this.util.env.prod) this.auth.goAffirmations();
-            else this.goReturnUrlOrHome();
-
-            baseLoading.close();
-            detailLoading.close();
-
-            // Unsubscribe after handling the user
-            unsubscribe();
-          } else {
-            baseLoading.close();
-          }
-        });
-      } catch (error: any) {
-        this.util.openSnackbar(`Sorry there's been an issue.`, error?.message);
-        console.error(`[login]`, error);
+  constructor() {
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const v = (params.get('view') as View) || this.view();
+      this.view.set(v);
+      this.options.formState.view = v; // formly options formstate.view needed for consistent hide expr execution
+      if (this.analytics) {
+        logEvent(this.analytics, 'screen_view');
+        logEvent(this.analytics, 'page_view', { page: v });
       }
-    }
+    });
   }
 
   async loginEmail(model: any) {
@@ -146,8 +114,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
         await this.auth.updateUserData(cred);
 
-        if (this.util.env.prod) this.auth.goAffirmations();
-        else this.goReturnUrlOrHome();
+        this.goReturnUrlOrHome();
 
         detailLoading.close();
       } else {
@@ -163,25 +130,38 @@ export class LoginPage implements OnInit, OnDestroy {
   async signupEmail(model: any) {
     const user = await this.auth.signupEmail(model);
     if (user) {
-      await this.auth.goChooseUserType();
+      this.goReturnUrlOrHome();
     }
   }
 
   async loginGoogle() {
-    sessionStorage.setItem('web-redirect-login-in-progress', '1');
-    await this.auth.loginGoogle();
-    await this.auth.goAffirmations(); // for cap login
+    try {
+      const cred = await this.auth.loginGoogle();
+      if (cred) {
+        await this.auth.updateUserData(cred);
+        this.goReturnUrlOrHome();
+      }
+    } catch (error: any) {
+      if (error?.code !== 'auth/popup-closed-by-user') {
+        this.util.openSnackbar(`Sorry there's been an issue.`, error?.message);
+        console.error(`[login]`, error);
+      }
+    }
   }
 
   async loginApple() {
-    sessionStorage.setItem('web-redirect-login-in-progress', '1'); // for web redirect login
-    await this.auth.loginApple();
-    await this.auth.goAffirmations(); // for cap login
-  }
-
-  async loginAnonymous() {
-    await this.auth.loginAnonymous();
-    await this.auth.goAffirmations();
+    try {
+      const cred = await this.auth.loginApple();
+      if (cred) {
+        await this.auth.updateUserData(cred);
+        this.goReturnUrlOrHome();
+      }
+    } catch (error: any) {
+      if (error?.code !== 'auth/popup-closed-by-user') {
+        this.util.openSnackbar(`Sorry there's been an issue.`, error?.message);
+        console.error(`[login]`, error);
+      }
+    }
   }
 
   async sendPasswordResetEmail(model: any) {
@@ -203,14 +183,21 @@ export class LoginPage implements OnInit, OnDestroy {
     this.router.navigate(['.'], { queryParams: { view }, relativeTo: this.route, queryParamsHandling: 'merge' });
   }
 
+  goWelcome(p: Params = {}) {
+    return this.router.navigate([ACCOUNTS_ROUTES.welcome], {
+      queryParams: { flow: 'signin', ...p },
+      queryParamsHandling: 'merge',
+    });
+  }
+  goChooseUserType() {
+    return this.router.navigate([ACCOUNTS_ROUTES.chooseUserType], { queryParamsHandling: 'merge' });
+  }
   goReturnUrlOrHome() {
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
     if (returnUrl) this.router.navigateByUrl(returnUrl);
-    else this.auth.goHome();
+    else this.goHome();
   }
-
-  ngOnDestroy() {
-    this.destroy$.next(0);
-    this.destroy$.complete();
+  goHome() {
+    return this.router.navigateByUrl('/');
   }
 }

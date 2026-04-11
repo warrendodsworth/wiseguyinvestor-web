@@ -1,31 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { ShowPhotoComponent } from '../../core/components/show-photo.component';
-import { AppUser } from '../../core/models/user';
-import { AuthService } from '../../core/services/auth.service';
-import { LayoutService } from '../../core/services/layout.service';
-import { UtilService } from '../../core/services/util.service';
+import { switchMap } from 'rxjs/operators';
+import { ShowPhotoComponent } from '@core';
+import { AuthService } from '@core';
+import { LayoutService } from '@core';
+import { UtilService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 
 @Component({
   templateUrl: './user-profile.page.html',
   imports: [SHARED_CONFIG, ShowPhotoComponent],
 })
-export class UserProfilePage implements OnInit {
-  uid: string = '';
-  user: AppUser | null = null;
+export class UserProfilePage {
   useTransparentToolbar = true;
 
-  constructor(
-    public _layout: LayoutService,
-    public util: UtilService,
-    public route: ActivatedRoute,
-    public auth: AuthService
-  ) {}
+  _layout = inject(LayoutService);
+  util = inject(UtilService);
+  auth = inject(AuthService);
+  route = inject(ActivatedRoute);
 
-  async ngOnInit() {
-    this.uid = this.route.snapshot.paramMap.get('uid') ?? '';
+  user = toSignal(
+    this.route.paramMap.pipe(
+      switchMap((params) => {
+        const uid = params.get('uid');
+        return uid ? this.auth.getUser$(uid) : this.auth.currentUser$;
+      })
+    )
+  );
 
-    this.user = await this.auth.getUser(this.uid);
-  }
+  canEdit = computed(() => {
+    const user = this.user();
+    const currentUser = this.auth.currentUser();
+    if (!user || !currentUser) return false;
+    return user.id === currentUser.id || currentUser.roles.admin;
+  });
 }

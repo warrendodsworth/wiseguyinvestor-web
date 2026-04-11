@@ -1,23 +1,49 @@
 import { Routes } from '@angular/router';
+import { LoginPage } from './login/login.page';
+import { UserEditPage } from './user-edit/user-edit.page';
+import { UserProfilePage } from './user-profile/user-profile.page';
 import { AdminGuard } from './admin.guard';
+import { AuthGuard } from './auth.guard';
+
+export { ACCOUNTS_ROUTES } from './accounts.constants';
 
 export const accountsRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   {
     path: 'login',
-    loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
+    component: LoginPage,
     title: 'Login',
   },
   {
     path: 'profile',
-    loadComponent: () => import('./user-profile/user-profile.page').then((m) => m.UserProfilePage),
+    canActivate: [AuthGuard],
+    component: UserProfilePage,
     title: 'Profile',
   },
   {
     path: 'edit',
-    loadComponent: () => import('./user-edit/user-edit.page').then((m) => m.UserEditPage),
+    canActivate: [AuthGuard],
+    component: UserEditPage,
     title: 'Edit Profile',
+  },
+  {
+    path: 'change-email',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./change-email/change-email.page').then((m) => m.ChangeEmailPage),
+    title: 'Change Email',
+  },
+  {
+    path: 'delete-account',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./delete-account/delete-account.page').then((m) => m.DeleteAccountPage),
+    title: 'Delete Account',
+  },
+  {
+    path: 'set-password',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./set-password/set-password.page').then((m) => m.SetPasswordPage),
+    title: 'Set Password',
   },
   {
     path: 'users',
