@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { DatePredicate } from '@core/services';
+import { DatePredicate } from '@core';
 
 import { SHARED_CONFIG } from '../../../shared/shared.config';
 import { Post } from '../../post';
@@ -30,6 +30,9 @@ export class PostComponent {
   excerpt = computed(() => {
     const p = this.post();
     if (!p?.text) return '';
-    return p.text.replace(/<[^>]*>/g, '').slice(0, 160).trim();
+    return p.text
+      .replace(/<[^>]*>/g, '')
+      .slice(0, 160)
+      .trim();
   });
 }

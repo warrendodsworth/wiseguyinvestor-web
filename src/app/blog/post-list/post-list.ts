@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
 import { orderBy } from '@angular/fire/firestore';
-import { AuthService } from '@core/services';
+import { AuthService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { PostService } from '../post.service';
 

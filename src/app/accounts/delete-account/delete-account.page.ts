@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService, UtilService } from '@core/services';
+import { AuthService, UtilService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
 

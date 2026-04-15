@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ShowPhotoComponent } from '@core/ui';
-import { AuthService, LayoutService, UtilService } from '@core/services';
+import { AuthService, LayoutService, UtilService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 
 @Component({

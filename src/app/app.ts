@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { AuthService, ConfigService, ThemeService } from '@core/services';
+import { AuthService, ConfigService, ThemeService } from '@core';
 import { SHARED_CONFIG } from './shared/shared.config';
 
 @Component({

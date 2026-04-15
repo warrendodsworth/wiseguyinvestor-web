@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { firstValueFrom } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { Photo } from '@core/models';
+import { Photo } from '@core';
 import { SHARED_CONFIG } from '../../shared.config';
 import { UnsplashPhoto } from './unsplash-response';
 import { UnsplashService } from './unsplash.service';

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
-import { AuthService, State, Store, UtilService } from '@core/services';
+import { AuthService, State, Store, UtilService } from '@core';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 
 export class UserListPageState extends State {

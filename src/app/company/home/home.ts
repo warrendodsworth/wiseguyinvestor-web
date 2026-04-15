@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { PostComponent } from '../../blog/components/post/post';
 import { Post } from '../../blog/post';
 import { PostService } from '../../blog/post.service';
-import { AuthService } from '@core/services';
+import { AuthService } from '@core';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 
 @Component({

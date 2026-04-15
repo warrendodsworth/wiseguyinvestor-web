@@ -6,7 +6,7 @@ import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { Post } from '../post';
 import { PostService } from '../post.service';
-import { AuthService, DatePredicate, UtilService } from '@core/services';
+import { AuthService, DatePredicate, UtilService } from '@core';
 
 @Component({
   selector: 'app-post-detail',
@@ -22,7 +22,7 @@ export class PostDetailComponent implements OnInit {
     public router: Router,
     public auth: AuthService,
     public postService: PostService,
-    public util: UtilService,
+    public util: UtilService
   ) {}
 
   toDate(d: DatePredicate): Date {
@@ -38,10 +38,10 @@ export class PostDetailComponent implements OnInit {
         return this.postService.one$(postId).pipe(
           tap((p) => {
             if (!p?.id) this.router.navigateByUrl('/blog');
-          }),
+          })
         );
       }),
-      shareReplay(1),
+      shareReplay(1)
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Entity } from '@core/models';
+import { Entity } from '@core';
 
 // All properties are strictly typed and initialized for strict TypeScript.
 // No 'readonly' as per user instruction.
