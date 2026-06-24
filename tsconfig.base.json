@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@core": ["./libs/core/index.ts"],
+      "@core/ui": ["./libs/core/index-ui.ts"],
+      "@core/firebase": ["./libs/core/firebase/index.ts"]
+    }
+  }
+}

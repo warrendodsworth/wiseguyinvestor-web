@@ -8,7 +8,8 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 import { Analytics } from '@angular/fire/analytics';
 import { logEvent } from 'firebase/analytics';
-import { AuthService, ConfigService, UtilService } from '@core';
+import { ConfigService, UtilService } from '@core';
+import { FirebaseAuthService } from '@core/firebase';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
 
@@ -24,7 +25,7 @@ export class LoginPage {
   protected authModular = inject(Auth);
   router = inject(Router);
   route = inject(ActivatedRoute);
-  auth = inject(AuthService);
+  auth = inject(FirebaseAuthService);
   util = inject(UtilService);
   config = inject(ConfigService);
 

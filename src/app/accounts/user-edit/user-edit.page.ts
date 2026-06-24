@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
 import { AppUser, Roles } from '@core';
-import { AuthService, UtilService } from '@core';
+import { UtilService } from '@core';
+import { FirebaseAuthService } from '@core/firebase';
 import { displayNameField, profilePhotoField, emailReadOnlyField } from '@core/ui';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
@@ -16,7 +17,7 @@ import { ACCOUNTS_ROUTES } from '../accounts.constants';
 export class UserEditPage implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  auth = inject(AuthService);
+  auth = inject(FirebaseAuthService);
   util = inject(UtilService);
   cdRef = inject(ChangeDetectorRef);
 

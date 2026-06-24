@@ -16,6 +16,7 @@ import { provideQuillConfig, QuillModule } from 'ngx-quill';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { ENVIRONMENT, provideCoreConfig } from '@core';
+import { provideFirebaseCoreLib } from '@core/firebase';
 import { provideFormly, provideMaterial } from '@core/ui';
 
 export const appConfig: ApplicationConfig = {
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     provideCoreConfig({ id: 'wgi', title: 'Wiseguy Investor' }, { theme: 'dark' }),
+    provideFirebaseCoreLib(),
     provideMaterial(),
     provideFormly(),
     { provide: ENVIRONMENT, useValue: environment },

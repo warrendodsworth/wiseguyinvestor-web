@@ -3,7 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 
-import { AuthService, UtilService } from '@core';
+import { UtilService } from '@core';
+import { FirebaseAuthService } from '@core/firebase';
 import { SHARED_FORMLY_CONFIG } from '../../shared/shared.config';
 import { ACCOUNTS_ROUTES } from '../accounts.constants';
 
@@ -13,7 +14,7 @@ import { ACCOUNTS_ROUTES } from '../accounts.constants';
 })
 export class ChangeEmailPage implements OnInit {
   router = inject(Router);
-  auth = inject(AuthService);
+  auth = inject(FirebaseAuthService);
   util = inject(UtilService);
 
   form = new FormGroup({});

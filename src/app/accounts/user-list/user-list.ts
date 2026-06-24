@@ -3,7 +3,8 @@ import { QueryConstraint, where } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, from, shareReplay, switchMap, takeUntil } from 'rxjs';
 import { AppUser } from '@core';
-import { AuthService, QueryConfig, UserService, UtilService } from '@core';
+import { AuthService, UtilService } from '@core';
+import { FirebaseUserService, QueryConfig } from '@core/firebase';
 import { SHARED_CONFIG } from '../../shared/shared.config';
 import { UserItemComponent } from '../components/user-item.component';
 import { UserListPageStore } from './user-list-filter.component';
@@ -18,7 +19,7 @@ export class UserList implements OnInit {
     public route: ActivatedRoute,
     public auth: AuthService,
     public util: UtilService,
-    public _user: UserService,
+    public _user: FirebaseUserService,
     public _store: UserListPageStore
   ) {}
   private destroy$ = new Subject();
