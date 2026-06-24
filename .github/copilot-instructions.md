@@ -16,14 +16,14 @@ You are an expert in TypeScript, Angular, Firebase, and scalable web application
 ## Developer Workflows
 
 - **Start app & emulators:**
-  - `npm start` (or VSCode build task: `Start Web (Full)`)
+  - `pnpm start` (or VSCode build task: `Start Web (Full)`)
   - App: http://localhost:8100
   - Emulator UI: http://localhost:4000
 - **Build:** `ng build`
 - **Unit tests:** `ng test` (Jest)
-- **Lint:** `npx eslint .`
+- **Lint:** `pnpm exec eslint .`
 - **Functions:**
-  - Server code in `/functions`. Build with `npm run build` and test with `npm run test` inside `functions/`.
+  - Server code in `/functions`. Build with `pnpm --dir functions run build` and test with `pnpm --dir functions run test`.
 - **Database import/export:**
   - Import: `firestore-import --accountCredentials service-key.json --backupFile dev-database.json`
   - Export: `firestore-export --accountCredentials service-key.json --backupFile dev-database.json`

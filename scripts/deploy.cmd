@@ -2,7 +2,7 @@
 
 call ng build --prod
 
-REM call npm run sw
+REM call pnpm run sw
 
 call firebase functions:config:set stripe.testkey="sk_test_GV7eMzd97MnL8BQx9cbiODZv"
 

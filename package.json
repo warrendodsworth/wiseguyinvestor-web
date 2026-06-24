@@ -2,22 +2,20 @@
   "name": "app",
   "version": "0.1.19",
   "scripts": {
-    "start": "npm run stop_appserver_ports && ng serve",
-    "start_emulators": "npm run emulators_stop && firebase emulators:start --import=./emulators.backup --export-on-exit=./emulators.backup",
-    "start_functions": "cd functions && npm run start",
+    "start": "pnpm run stop_appserver_ports && ng serve",
+    "start_emulators": "pnpm run emulators_stop && firebase emulators:start --import=./emulators.backup --export-on-exit=./emulators.backup",
+    "start_functions": "pnpm --dir functions run start",
     "start_ios": "ionic cap run ios -l --external --open -- --hmr",
     "start_android": "ionic cap run android -l --external --open --disable-host-check -- --hmr",
     "start_wifi": "ionic serve --external -- --hmr",
-    "deploy_apps": "npm run build && npm run update_apps && ./build/android/build.sh && ./build/ios/build.sh",
-    "update_apps": "npx trapeze run config-trapeze.yaml --android-project android --ios-project ios/App -y",
-    "prebuild": "node scripts/bump-version.js",
+    "deploy_apps": "pnpm run build && pnpm run update_apps && ./build/android/build.sh && ./build/ios/build.sh",
+    "update_apps": "pnpm dlx trapeze run config-trapeze.yaml --android-project android --ios-project ios/App -y",
     "build": "ng build --configuration production",
-    "postbuild": "cp dist/app1/browser/index.csr.html dist/app1/browser/index.html",
     "build_ionic": "ionic cap sync --deployment --configuration production",
-    "build_android": "npm run build && ./build/android/build.sh",
-    "build_deploy_ios": "npm run build && ./build/ios/build.sh",
-    "deploy_hosting-alpha": "npm run build && firebase hosting:channel:deploy alpha",
-    "deploy_website": "npm run build && firebase deploy --only hosting,firestore:rules,database:rules",
+    "build_android": "pnpm run build && ./build/android/build.sh",
+    "build_deploy_ios": "pnpm run build && ./build/ios/build.sh",
+    "deploy_hosting-alpha": "pnpm run build && firebase hosting:channel:deploy alpha",
+    "deploy_website": "pnpm run build && firebase deploy --only hosting,firestore:rules,database:rules",
     "deploy_functions": "firebase use prod && firebase deploy --only functions",
     "deploy_rules": "firebase deploy --only firestore:rules,database:rules",
     "deploy_indexes": "firebase deploy --only firestore:indexes",
@@ -35,18 +33,21 @@
     "lint": "eslint .",
     "lint_fix": "eslint . --fix",
     "prettify": "prettier --write \"src/**/*.{ts,html}\"",
-    "bump-patch-version": "npm version patch -m \"+v%s [patch] [skip ci]\"",
-    "bump-minor-version": "npm version patch -m \"+v%s [minor] [skip ci]\"",
+    "bump-patch-version": "pnpm version patch -m \"+v%s [patch] [skip ci]\"",
+    "bump-minor-version": "pnpm version patch -m \"+v%s [minor] [skip ci]\"",
     "preset-version": "git fetch --prune --prune-tags",
     "postset-version": "git push --tags",
     "ci:push": "git push orgin",
-    "ci:set-version": "npm version --no-git-tag-version",
-    "set-version": "npm version",
+    "ci:set-version": "pnpm version --no-git-tag-version",
+    "set-version": "pnpm version",
     "cordova:resources": "cordova-res --skip-config --copy",
     "create_pwa_assets": "node utils/pwa-asset-generator.mjs && prettier \"src/index.html\" --write",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "e2e": "ng e2e",
-    "install-all": "npm install && cd functions && npm install"
+    "install-all": "pnpm install -r"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
   },
   "prettier": {
     "printWidth": 120,
@@ -119,5 +120,6 @@
     "ts-jest": "^29.4.9",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.56.1"
-  }
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

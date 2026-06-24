@@ -22,15 +22,15 @@ WiseGuy Investor - Market Insights is a web application that provides users with
 - [Angular CLI](https://angular.dev/tools/cli)
 - [Firebase CLI](https://firebase.google.com/docs/cli)
 - [Capacitor CLI](https://capacitorjs.com/docs/getting-started)
-- Other tools: `npm i -g node-firestore-import-export rimraf workbox-cli pwa-asset-generator kill-port`
+- Other tools: `pnpm add -g node-firestore-import-export rimraf workbox-cli pwa-asset-generator kill-port`
 
-- Shortcut: Install global packages `npm i -g @angular/cli @capacitor/cli firebase-tools`
-- Shortcut: Install local packages `npm install-all`
+- Shortcut: Install global packages `pnpm add -g @angular/cli @capacitor/cli firebase-tools`
+- Shortcut: Install local packages `pnpm run install-all`
 
 ### Installation
 
 ```bash
-npm install
+pnpm install -r
 ```
 
 ### Development
@@ -38,7 +38,7 @@ npm install
 Start the app and emulators:
 
 ```bash
-npm start
+pnpm start
 ```
 
 Run the app:
@@ -170,10 +170,10 @@ ng generate --help
 - [Angular CLI](https://angular.dev/tools/cli)
 - [Firebase CLI](https://firebase.google.com/docs/cli)
 - [Capacitor CLI](https://capacitorjs.com/docs/getting-started)
-- Other tools: `npm i -g node-firestore-import-export rimraf workbox-cli pwa-asset-generator kill-port`
+- Other tools: `pnpm add -g node-firestore-import-export rimraf workbox-cli pwa-asset-generator kill-port`
 
-- Shortcut: Install global packages `npm i -g @angular/cli @capacitor/cli firebase-tools`
-- Shortcut: Install local packages `npm install-all`
+- Shortcut: Install global packages `pnpm add -g @angular/cli @capacitor/cli firebase-tools`
+- Shortcut: Install local packages `pnpm run install-all`
   To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
 
 ```bash
