@@ -9,6 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Resolve core-lib ref
+        id: core_lib_ref
+        run: echo "sha=$(git rev-parse HEAD:libs/core)" >> "$GITHUB_OUTPUT"
+      - name: Check out core-lib
+        uses: actions/checkout@v4
+        with:
+          repository: warrendodsworth/core-lib
+          path: libs/core
+          ref: ${{ steps.core_lib_ref.outputs.sha }}
+          token: ${{ secrets.CORE_LIB_TOKEN }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
